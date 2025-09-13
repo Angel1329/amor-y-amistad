@@ -115,36 +115,46 @@
     </div>
   </div>
   <script>
-    // Control de desbloqueo por patrón
-    const itemCorazon = document.getElementById('item-corazon');
-    const itemCarta = document.getElementById('item-carta');
-    const itemRosa = document.getElementById('item-rosa');
-
-    // Opcional: animación de transición suave
-    function mostrarSolo(elemento) {
-      [itemCorazon, itemCarta, itemRosa].forEach(el => {
-        if (el === elemento) {
-          el.classList.remove('oculto');
-          el.style.opacity = 0;
-          setTimeout(() => { el.style.opacity = 1; }, 10);
-        } else {
-          el.style.opacity = 0;
-          setTimeout(() => { el.classList.add('oculto'); }, 300);
-        }
-      });
+    class DesbloqueoApp {
+      constructor() {
+        this.itemCorazon = document.getElementById('item-corazon');
+        this.itemCarta = document.getElementById('item-carta');
+        this.itemRosa = document.getElementById('item-rosa');
+        this.items = [this.itemCorazon, this.itemCarta, this.itemRosa];
+        this.initTransicion();
+        this.initListener();
+      }
+      initTransicion() {
+        // CSS para transición
+        const style = document.createElement('style');
+        style.innerHTML = `.item { transition: opacity 0.3s; }`;
+        document.head.appendChild(style);
+      }
+      mostrarSolo(elemento) {
+        this.items.forEach(el => {
+          if (el === elemento) {
+            el.classList.remove('oculto');
+            el.style.opacity = 0;
+            setTimeout(() => { el.style.opacity = 1; }, 10);
+          } else {
+            el.style.opacity = 0;
+            setTimeout(() => { el.classList.add('oculto'); }, 300);
+          }
+        });
+      }
+      initListener() {
+        window.addEventListener('message', (event) => {
+          if (event.data === 'desbloquear-carta') {
+            this.mostrarSolo(this.itemCarta);
+          }
+          if (event.data === 'desbloquear-rosa') {
+            this.mostrarSolo(this.itemRosa);
+          }
+        });
+      }
     }
-    window.addEventListener('message', function(event) {
-      if (event.data === 'desbloquear-carta') {
-        mostrarSolo(itemCarta);
-      }
-      if (event.data === 'desbloquear-rosa') {
-        mostrarSolo(itemRosa);
-      }
-    });
-    // CSS para transición
-    const style = document.createElement('style');
-    style.innerHTML = `.item { transition: opacity 0.3s; }`;
-    document.head.appendChild(style);
+    // Inicializar la app de desbloqueo
+    new DesbloqueoApp();
   </script>
 </body>
 </html>

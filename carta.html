@@ -46,8 +46,8 @@
 
       --envelope-transform: rotateY(0deg); /* Transformación inicial del sobre */
       --envelope-transform-hover: rotateY(180deg); /* Transformación al pasar el ratón */
-      --evelope-rotate-delay: calc(var(--duration) / 1); /* Retraso en la rotación */
-      --evelope-rotate-delay-hover: 0ms; /* Retraso en la rotación al pasar el ratón */
+      --eople-rotate-delay: calc(var(--duration) / 1); /* Retraso en la rotación */
+      --eople-rotate-delay-hover: 0ms; /* Retraso en la rotación al pasar el ratón */
 
       --letter-clr-bg: #fff; /* Color de fondo de la carta */
       --letter-clr-text: #000000; /* Color del texto de la carta */
@@ -112,7 +112,7 @@
       width: var(--shadow-width);
       height: 40px;
       transition: var(--duration) ease-in-out;
-      transition-delay: var(--evelope-rotate-delay);
+      transition-delay: var(--eople-rotate-delay);
       transform: var(--shadow-transform);
       translate: -50% 0;
       border-radius: 50%;
@@ -123,7 +123,7 @@
     /* Estilos cuando el sobre está abierto */
     .envelope.open {
       --envelope-transform: var(--envelope-transform-hover);
-      --evelope-rotate-delay: var(--eople-rotate-delay-hover);
+      --eople-rotate-delay: var(--eople-rotate-delay-hover);
       --shadow-transform: rotateY(180deg);
       --fold-rotate: var(--fold-rotate-hover);
       --fold-delay: var(--fold-delay-hover);
@@ -443,115 +443,95 @@
 
 
 <script>
-  // Obtiene el elemento del sobre
-  const envelope = document.getElementById("envelope");
-  // Evita que se pueda copiar el código o abrir las herramientas de desarrollador
-  document.addEventListener('contextmenu', e => e.preventDefault());
-  document.addEventListener('keydown', e => {
-    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'u')) {
-      e.preventDefault();
-    }
-  });
-
-  // Elementos para el scroll personalizado
-  const letter = document.querySelector('.letter');
-  const scrollThumb = document.getElementById('scrollThumb');
-  const scrollUp = document.getElementById('scrollUp');
-  const scrollDown = document.getElementById('scrollDown');
-
-  // Tamaños para el scroll personalizado
-  const track = scrollThumb.parentElement;
-  const trackHeight = track.offsetHeight;
-  const thumbHeight = scrollThumb.offsetHeight;
-
-  // Función para actualizar posición del thumb según scroll de la carta
-  function updateThumb() {
-    const scrollRatio = letter.scrollTop / (letter.scrollHeight - letter.clientHeight);
-    scrollThumb.style.top = `${scrollRatio * (trackHeight - thumbHeight)}px`;
+class CartaApp {
+  constructor() {
+    this.envelope = document.getElementById("envelope");
+    this.letter = document.querySelector('.letter');
+    this.scrollThumb = document.getElementById('scrollThumb');
+    this.scrollUp = document.getElementById('scrollUp');
+    this.scrollDown = document.getElementById('scrollDown');
+    this.textElement = document.getElementById("text");
+    this.desbloquearRosaBtn = document.getElementById('desbloquearRosaBtn');
+    this.message = `Cada día que paso contigo es un regalo que no puedo dejar de apreciar. \nTu risa es mi melodía favorita, y tu mirada, mi lugar seguro. \nCuanto más tiempo estoy a tu lado, más te amo y más quiero compartir mi vida contigo. \nEres mi pensamiento más dulce y mi sueño más hermoso hecho realidad.`;
+    this.index = 0;
+    this.speed = 75;
+    this.isDragging = false;
+    this.startY = 0;
+    this.startScrollTop = 0;
+    this.track = this.scrollThumb.parentElement;
+    this.trackHeight = this.track.offsetHeight;
+    this.thumbHeight = this.scrollThumb.offsetHeight;
+    this.init();
   }
-
-  // Scroll al arrastrar el thumb
-  let isDragging = false;
-  let startY, startScrollTop;
-
-  scrollThumb.addEventListener('mousedown', e => {
-    isDragging = true;
-    startY = e.clientY;
-    startScrollTop = letter.scrollTop;
-    scrollThumb.style.cursor = 'grabbing';
-  });
-  document.addEventListener('mouseup', () => {
-    isDragging = false;
-    scrollThumb.style.cursor = 'grab';
-  });
-  document.addEventListener('mousemove', e => {
-    if (!isDragging) return;
-    const deltaY = e.clientY - startY;
-    const scrollRatio = deltaY / (trackHeight - thumbHeight);
-    letter.scrollTop = startScrollTop + scrollRatio * (letter.scrollHeight - letter.clientHeight);
-    updateThumb();
-  });
-
-  // Scroll con botones
-  scrollUp.addEventListener('click', () => {
-    letter.scrollTop -= 30;
-    updateThumb();
-  });
-  scrollDown.addEventListener('click', () => {
-    letter.scrollTop += 30;
-    updateThumb();
-  });
-
-  // Actualizar thumb al hacer scroll con rueda
-  letter.addEventListener('scroll', updateThumb);
-  updateThumb();
-
-  // --- Typewriter effect code ---
-  const textElement = document.getElementById("text");
-
-  // Tu texto romántico
-  const message = `Cada día que paso contigo es un regalo que no puedo dejar de apreciar. 
-Tu risa es mi melodía favorita, y tu mirada, mi lugar seguro. 
-Cuanto más tiempo estoy a tu lado, más te amo y más quiero compartir mi vida contigo. 
-Eres mi pensamiento más dulce y mi sueño más hermoso hecho realidad.`;
-
-  // Variables para escribir letra por letra
-  let index = 0;
-  const speed = 75; // milisegundos entre cada letra
-
-  function typeWriter() {
-  if (index < message.length) {
-    textElement.innerHTML += message.charAt(index);
-    // Add auto-scroll to bottom
-    letter.scrollTop = letter.scrollHeight; // This will scroll the letter div to the bottom
-    updateThumb(); // Update the custom scroll thumb as well
-    index++;
-    setTimeout(typeWriter, speed);
-  }
-}
-
-  // Modificado: Solo se activa cuando abres el sobre
-  envelope.addEventListener("click", () => {
-    envelope.classList.toggle("open");
-    
-    // Reinicia el efecto si se cierra y abre de nuevo
-    if (envelope.classList.contains("open")) {
-      textElement.innerHTML = "";
-      index = 0;
-      setTimeout(typeWriter, 1500); // Empieza después de que la carta suba
-    }
-  });
-
-  // Desbloqueo de rosa.html al hacer clic en la imagen
-  const desbloquearRosaBtn = document.getElementById('desbloquearRosaBtn');
-  if (desbloquearRosaBtn) {
-    desbloquearRosaBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      if (window.parent !== window) {
-        window.parent.postMessage('desbloquear-rosa', '*');
+  init() {
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'u')) {
+        e.preventDefault();
       }
     });
+    this.scrollThumb.addEventListener('mousedown', e => this.startDrag(e));
+    document.addEventListener('mouseup', () => this.stopDrag());
+    document.addEventListener('mousemove', e => this.onDrag(e));
+    this.scrollUp.addEventListener('click', () => this.scroll(-30));
+    this.scrollDown.addEventListener('click', () => this.scroll(30));
+    this.letter.addEventListener('scroll', () => this.updateThumb());
+    this.updateThumb();
+    this.envelope.addEventListener("click", () => this.toggleEnvelope());
+    if (this.desbloquearRosaBtn) {
+      this.desbloquearRosaBtn.addEventListener('click', e => this.desbloquearRosa(e));
+    }
   }
+  updateThumb() {
+    const scrollRatio = this.letter.scrollTop / (this.letter.scrollHeight - this.letter.clientHeight);
+    this.scrollThumb.style.top = `${scrollRatio * (this.trackHeight - this.thumbHeight)}px`;
+  }
+  startDrag(e) {
+    this.isDragging = true;
+    this.startY = e.clientY;
+    this.startScrollTop = this.letter.scrollTop;
+    this.scrollThumb.style.cursor = 'grabbing';
+  }
+  stopDrag() {
+    this.isDragging = false;
+    this.scrollThumb.style.cursor = 'grab';
+  }
+  onDrag(e) {
+    if (!this.isDragging) return;
+    const deltaY = e.clientY - this.startY;
+    const scrollRatio = deltaY / (this.trackHeight - this.thumbHeight);
+    this.letter.scrollTop = this.startScrollTop + scrollRatio * (this.letter.scrollHeight - this.letter.clientHeight);
+    this.updateThumb();
+  }
+  scroll(amount) {
+    this.letter.scrollTop += amount;
+    this.updateThumb();
+  }
+  typeWriter() {
+    if (this.index < this.message.length) {
+      this.textElement.innerHTML += this.message.charAt(this.index);
+      this.letter.scrollTop = this.letter.scrollHeight;
+      this.updateThumb();
+      this.index++;
+      setTimeout(() => this.typeWriter(), this.speed);
+    }
+  }
+  toggleEnvelope() {
+    this.envelope.classList.toggle("open");
+    if (this.envelope.classList.contains("open")) {
+      this.textElement.innerHTML = "";
+      this.index = 0;
+      setTimeout(() => this.typeWriter(), 1500);
+    }
+  }
+  desbloquearRosa(e) {
+    e.preventDefault();
+    if (window.parent !== window) {
+      window.parent.postMessage('desbloquear-rosa', '*');
+    }
+  }
+}
+document.addEventListener('DOMContentLoaded', () => new CartaApp());
 </script>
 
 </body>

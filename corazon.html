@@ -276,81 +276,63 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Obtiene los elementos del DOM
-            const toggle = document.getElementById('toggle');
-            const heart = document.getElementById('heart');
-            const status = document.getElementById('status');
-            const particlesContainer = document.getElementById('particles');
-            let redirectTimer = null; // Variable para el temporizador de redirección
-            
-            // Evento que se dispara al cambiar el estado del interruptor
-            toggle.addEventListener('change', function() {
-                if (this.checked) {
-                    // Si el interruptor está encendido
-                    heart.classList.add('on'); // Enciende el corazón
-                    status.textContent = "Corazón Encendido";
-                    status.classList.add('active');
-                    
-                    createParticles(); // Crea las partículas
-                    
-                    // Inicia un temporizador para redirigir a otra página
-                    redirectTimer = setTimeout(() => {
-                        status.textContent = "¡Preparando sorpresa!";
-                        
-                        // Redirige a carta.html después de 1 segundo
-                        setTimeout(() => {
-                            if (window.parent !== window) {
-                                window.parent.postMessage('desbloquear-carta', '*');
-                            }
-                        }, 1000);
-                    }, 3000);
-                } else {
-                    // Si el interruptor está apagado
-                    heart.classList.remove('on'); // Apaga el corazón
-                    status.textContent = "Corazón Apagado";
-                    status.classList.remove('active');
-                    
-                    // Cancela el temporizador de redirección si existe
-                    if (redirectTimer) {
-                        clearTimeout(redirectTimer);
-                        redirectTimer = null;
-                    }
-                }
-            });
-            
-            // Función para crear las partículas
-            function createParticles() {
-                for (let i = 0; i < 50; i++) {
-                    setTimeout(() => {
-                        const particle = document.createElement('div');
-                        particle.classList.add('particle');
-                        
-                        // Asigna tamaño y posición aleatorios a las partículas
-                        const size = Math.random() * 12 + 5;
-                        particle.style.width = `${size}px`;
-                        particle.style.height = `${size}px`;
-                        
-                        const posX = window.innerWidth/2 + (Math.random() * 200 - 100);
-                        const posY = window.innerHeight/2 + (Math.random() * 100 - 50);
-                        
-                        particle.style.left = `${posX}px`;
-                        particle.style.top = `${posY}px`;
-                        
-                        // Asigna una duración de animación aleatoria
-                        const duration = Math.random() * 2 + 1;
-                        particle.style.animation = `float-up ${duration}s ease-out forwards`;
-                        
-                        particlesContainer.appendChild(particle);
-                        
-                        // Elimina la partícula después de que termine la animación
-                        setTimeout(() => {
-                            particle.remove();
-                        }, duration * 1000);
-                    }, i * 50);
-                }
-            }
-        });
+    class CorazonApp {
+      constructor() {
+        this.toggle = document.getElementById('toggle');
+        this.heart = document.getElementById('heart');
+        this.status = document.getElementById('status');
+        this.particlesContainer = document.getElementById('particles');
+        this.redirectTimer = null;
+        this.init();
+      }
+      init() {
+        this.toggle.addEventListener('change', () => this.onToggleChange());
+      }
+      onToggleChange() {
+        if (this.toggle.checked) {
+          this.heart.classList.add('on');
+          this.status.textContent = "Corazón Encendido";
+          this.status.classList.add('active');
+          this.createParticles();
+          this.redirectTimer = setTimeout(() => {
+            this.status.textContent = "¡Preparando sorpresa!";
+            setTimeout(() => {
+              if (window.parent !== window) {
+                window.parent.postMessage('desbloquear-carta', '*');
+              }
+            }, 1000);
+          }, 3000);
+        } else {
+          this.heart.classList.remove('on');
+          this.status.textContent = "Corazón Apagado";
+          this.status.classList.remove('active');
+          if (this.redirectTimer) {
+            clearTimeout(this.redirectTimer);
+            this.redirectTimer = null;
+          }
+        }
+      }
+      createParticles() {
+        for (let i = 0; i < 50; i++) {
+          setTimeout(() => {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 12 + 5;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            const posX = window.innerWidth/2 + (Math.random() * 200 - 100);
+            const posY = window.innerHeight/2 + (Math.random() * 100 - 50);
+            particle.style.left = `${posX}px`;
+            particle.style.top = `${posY}px`;
+            const duration = Math.random() * 2 + 1;
+            particle.style.animation = `float-up ${duration}s ease-out forwards`;
+            this.particlesContainer.appendChild(particle);
+            setTimeout(() => { particle.remove(); }, duration * 1000);
+          }, i * 50);
+        }
+      }
+    }
+    document.addEventListener('DOMContentLoaded', () => new CorazonApp());
     </script>
 </body>
 </html>
