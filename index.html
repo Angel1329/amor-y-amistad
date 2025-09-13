@@ -2,173 +2,149 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Demo Amor Responsive</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    * {
+    body {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
       min-height: 100vh;
       background: linear-gradient(120deg, #ffecec 0%, #fff5f5 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
       font-family: 'Quicksand', Arial, sans-serif;
-      padding-bottom: 2rem;
     }
-
-    .titulo {
-      margin-top: 3vh;
-      font-size: clamp(1.5rem, 5vw, 2.5rem);
-      text-align: center;
-      color: #d14d44;
-      letter-spacing: 0.1em;
-      font-weight: 700;
-      padding: 0 1rem;
-    }
-
     .main-flex {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      width: 90%;
-      max-width: 500px;
-      margin: 2rem auto 0;
-      padding: 0 1rem;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr;
+      gap: 2vw;
+      width: 95vw;
+      max-width: 1400px;
+      min-height: 80vh;
+      margin: 4vh auto 0 auto;
+      align-items: stretch;
+      justify-items: center;
     }
-
     .item {
-      background: rgba(255, 255, 255, 0.85);
-      border-radius: 1.5rem;
-      box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
-      padding: 1.5rem;
-      min-height: 40vh;
+      background: rgba(255,255,255,0.7);
+      border-radius: 2vw;
+      box-shadow: 0 0.5vw 2vw rgba(0,0,0,0.08);
+      padding: 2vw 1vw;
+      width: 100%;
+      min-width: 0;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s ease;
+      overflow: hidden;
     }
-
     .item iframe {
       width: 100%;
-      height: 30vh;
-      min-height: 200px;
+      height: 70vh;
       border: none;
-      border-radius: 1rem;
+      border-radius: 1vw;
       background: transparent;
     }
-
-    /* Animación de entrada */
-    .item.oculto {
-      transform: translateY(20px);
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .item.mostrar {
-      transform: translateY(0);
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    @media (min-width: 768px) {
+    @media (max-width: 1100px) {
       .main-flex {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-        max-width: 900px;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(3, 1fr);
+        gap: 4vw;
       }
-
-      .item {
-        padding: 2rem;
-        min-height: 35vh;
-      }
-
       .item iframe {
-        height: 25vh;
-        min-height: 250px;
+        height: 45vh;
       }
-
+    }
+    @media (max-width: 700px) {
+      .main-flex {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+        gap: 0;
+        width: 100vw;
+        min-height: 70vh;
+      }
+      .item {
+        padding: 0;
+        border-radius: 0;
+        min-height: 60vh;
+        box-shadow: none;
+      }
+      .item iframe {
+        height: 65vh;
+        min-height: 320px;
+        border-radius: 0;
+      }
       .titulo {
-        font-size: 2rem;
+        font-size: 6vw;
+        margin-top: 2vw;
       }
     }
-
-    @media (min-width: 1024px) {
-      .main-flex {
-        max-width: 1200px;
-        gap: 2rem;
+    .titulo {
+      margin-top: 2vh;
+      font-size: 2.5vw;
+      text-align: center;
+      color: #d14d44;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+    }
+    @media (max-width: 700px) {
+      .titulo {
+        font-size: 5vw;
       }
-
-      .item {
-        padding: 2.5rem;
-        min-height: 50vh;
-      }
-
-      .item iframe {
-        height: 35vh;
-        min-height: 350px;
-      }
+    }
+    .item.oculto {
+      display: none !important;
     }
   </style>
 </head>
 <body>
-  <h1 class="titulo">Mi Trilogía de Amor</h1>
-  
+  <div class="titulo">Mi Trilogía de Amor</div>
   <div class="main-flex">
     <div class="item" id="item-corazon">
-      <iframe src="corazon.html" title="Corazón" loading="lazy"></iframe>
+      <iframe src="corazon.html" title="Corazón"></iframe>
     </div>
-    
     <div class="item oculto" id="item-carta">
-      <iframe src="carta.html" title="Carta" loading="lazy"></iframe>
+      <iframe src="carta.html" title="Carta"></iframe>
     </div>
-    
     <div class="item oculto" id="item-rosa">
-      <iframe src="rosa.html" title="Rosa" loading="lazy"></iframe>
+      <iframe src="rosa.html" title="Rosa"></iframe>
     </div>
   </div>
-
   <script>
     // Control de desbloqueo por patrón
-    const items = {
-      corazon: document.getElementById('item-corazon'),
-      carta: document.getElementById('item-carta'),
-      rosa: document.getElementById('item-rosa')
-    };
+    const itemCorazon = document.getElementById('item-corazon');
+    const itemCarta = document.getElementById('item-carta');
+    const itemRosa = document.getElementById('item-rosa');
 
-    function mostrarElemento(id) {
-      Object.values(items).forEach(item => {
-        item.classList.add('oculto');
-        item.classList.remove('mostrar');
+    // Opcional: animación de transición suave
+    function mostrarSolo(elemento) {
+      [itemCorazon, itemCarta, itemRosa].forEach(el => {
+        if (el === elemento) {
+          el.classList.remove('oculto');
+          el.style.opacity = 0;
+          setTimeout(() => { el.style.opacity = 1; }, 10);
+        } else {
+          el.style.opacity = 0;
+          setTimeout(() => { el.classList.add('oculto'); }, 300);
+        }
       });
-
-      if (items[id]) {
-        items[id].classList.remove('oculto');
-        // Forzar reflow antes de la animación
-        items[id].offsetHeight;
-        items[id].classList.add('mostrar');
-      }
     }
-
     window.addEventListener('message', function(event) {
-      switch(event.data) {
-        case 'desbloquear-carta':
-          mostrarElemento('carta');
-          break;
-        case 'desbloquear-rosa':
-          mostrarElemento('rosa');
-          break;
+      if (event.data === 'desbloquear-carta') {
+        mostrarSolo(itemCarta);
+      }
+      if (event.data === 'desbloquear-rosa') {
+        mostrarSolo(itemRosa);
       }
     });
-
-    // Inicializar el primer elemento visible
-    mostrarElemento('corazon');
+    // CSS para transición
+    const style = document.createElement('style');
+    style.innerHTML = `.item { transition: opacity 0.3s; }`;
+    document.head.appendChild(style);
   </script>
 </body>
 </html>
