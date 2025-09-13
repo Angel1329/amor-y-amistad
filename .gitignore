@@ -1,0 +1,7 @@
+# Ignorar archivos temporales y de configuración local
+.vscode/
+.qodo/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>My Love ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-adsense-account" content="ca-pub-4704501585981299">
+  <style>
+    /* Importa la fuente Quicksand de Google Fonts */
+    @import url(https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap);
+
+    /* Estilos generales y reseteo de caja */
+    *,
+    ::before,
+    ::after {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Quicksand", sans-serif; /* Define la fuente para el cuerpo del documento */
+      background: linear-gradient(to bottom right, #ffecec, #fff5f5, #ffebeb); /* Fondo con gradiente */
+      color: #333; /* Color de texto principal */
+      display: flex; /* Usa flexbox para centrar contenido */
+      justify-content: center; /* Centra horizontalmente */
+      align-items: center; /* Centra verticalmente */
+      min-height: 100vh; /* Altura mínima de la ventana */
+      margin: 0; /* Sin margen */
+      padding: 1rem; /* Relleno de 1 rem */
+      margin-top: 50px; /* Margen superior */
+      overflow: hidden; /* Oculta el desbordamiento */
+      -webkit-tap-highlight-color: transparent; /* Evita el resaltado en toques en móviles */
+    }
+
+    /* Estilos para el sobre */
+    .envelope {
+      /* Variables CSS para personalización */
+      --duration: 1000ms; /* Duración de las animaciones */
+      --shadow-width: calc(var(--envelope-width) * 0.85); /* Ancho de la sombra */
+      --shadow-blur: 15px; /* Desenfoque de la sombra */
+      --envelope-width: 300px; /* Ancho del sobre */
+      --envelope-height: 175px; /* Alto del sobre */
+      --envelope-clr-bg: #d14d44; /* Color de fondo del sobre */
+      --envelope-clr-bg-side: #c24e46; /* Color de los lados del sobre */
+      --envelope-clr-bg-bottom: #e15349; /* Color del fondo del sobre */
+      --envelope-clr-bg-top: #d14d44; /* Color de la solapa superior */
+      --envelope-clr-txt: #fff; /* Color del texto del sobre */
+
+      --envelope-transform: rotateY(0deg); /* Transformación inicial del sobre */
+      --envelope-transform-hover: rotateY(180deg); /* Transformación al pasar el ratón */
+      --evelope-rotate-delay: calc(var(--duration) / 1); /* Retraso en la rotación */
+      --evelope-rotate-delay-hover: 0ms; /* Retraso en la rotación al pasar el ratón */
+
+      --letter-clr-bg: #fff; /* Color de fondo de la carta */
+      --letter-clr-text: #000000; /* Color del texto de la carta */
+      --letter-font-size: 1rem; /* Tamaño de fuente de la carta */
+      --letter-delay: 0ms; /* Retraso de la animación de la carta */
+      --letter-delay-hover: calc(var(--duration) * 1.25); /* Retraso de la animación de la carta al pasar el ratón */
+
+      --fold-rotate: rotateX(0deg); /* Rotación de la solapa */
+      --fold-zindex-hover: 0; /* z-index de la solapa al pasar el ratón */
+      --fold-rotate-hover: rotateX(180deg); /* Rotación de la solapa al pasar el ratón */
+      --fold-delay: calc(var(--duration) / 2); /* Retraso de la animación de la solapa */
+      --fold-delay-hover: calc(var(--duration) * .75); /* Retraso de la animación de la solapa al pasar el ratón */
+
+      --front-font-size: 1rem; /* Tamaño de fuente del frente del sobre */
+      --snowman-width: 50px; /* Ancho del muñeco de nieve (no usado) */
+      --bells-width: 30px; /* Ancho de las campanas (no usado) */
+
+      position: relative; /* Posicionamiento relativo */
+      height: var(--envelope-height); /* Alto del sobre */
+      width: var(--envelope-width); /* Ancho del sobre */
+      perspective: 1000px; /* Perspectiva para el efecto 3D */
+      cursor: pointer; /* Cursor de puntero */
+    }
+
+    /* Media query para pantallas pequeñas (móviles) */
+    @media (max-width: 719px) {
+      .envelope {
+        --envelope-width: 280px; /* Ancho del sobre más pequeño */
+        --envelope-height: 160px; /* Alto del sobre más pequeño */
+        --letter-font-size: 0.9rem; /* Tamaño de fuente de la carta más pequeño */
+      }
+      .letter p {
+        width: 100%; /* Ancho del párrafo de la carta al 100% */
+      }
+      .custom-image {
+        width: 80px; /* Ancho de la imagen personalizada más pequeño */
+        height: 80px; /* Alto de la imagen personalizada más pequeño */
+      }
+      .custom-image2 {
+        width: 120px; /* Ancho de la segunda imagen personalizada más pequeño */
+        height: 120px; /* Alto de la segunda imagen personalizada más pequeño */
+      }
+    }
+
+    /* Media query para pantallas grandes (laptops) */
+    @media (min-width: 720px) {
+      .envelope {
+        --envelope-width: 600px; /* Ancho del sobre más grande */
+        --envelope-height: 350px; /* Alto del sobre más grande */
+        --letter-font-size: 1.6rem; /* Tamaño de fuente de la carta más grande */
+        --bells-width: 60px; /* Ancho de las campanas (no usado) */
+        --front-font-size: 1.25rem; /* Tamaño de fuente del frente del sobre más grande */
+      }
+    }
+    
+    /* Sombra del sobre */
+    .envelope::after {
+      content: "";
+      position: absolute;
+      top: 110%;
+      left: 50%;
+      width: var(--shadow-width);
+      height: 40px;
+      transition: var(--duration) ease-in-out;
+      transition-delay: var(--evelope-rotate-delay);
+      transform: var(--shadow-transform);
+      translate: -50% 0;
+      border-radius: 50%;
+      background: rgba(56, 6, 6, 0.4);
+      filter: blur(var(--shadow-blur));
+    }
+
+    /* Estilos cuando el sobre está abierto */
+    .envelope.open {
+      --envelope-transform: var(--envelope-transform-hover);
+      --evelope-rotate-delay: var(--eople-rotate-delay-hover);
+      --shadow-transform: rotateY(180deg);
+      --fold-rotate: var(--fold-rotate-hover);
+      --fold-delay: var(--fold-delay-hover);
+      --fold-zindex: var(--fold-zindex-hover);
+      --letter-height: var(--letter-height-hover);
+      --letter-delay: var(--letter-delay-hover);
+    }
+
+    /* Contenedor interno del sobre para la animación 3D */
+    .envelope-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: var(--duration) ease-in-out;
+      transition-delay: var(--eople-rotate-delay);
+      transform-style: preserve-3d;
+      transform: var(--envelope-transform);
+      display: grid;
+    }
+
+    /* Parte frontal y trasera del sobre */
+    .envelope-front,
+    .envelope-back {
+      position: relative;
+      grid-area: 1/1;
+      width: 100%;
+      height: 100%;
+      background-color: var(--envelope-clr-bg);
+      -webkit-backface-visibility: hidden; /* Oculta la cara trasera durante la animación */
+      backface-visibility: hidden;
+      perspective: 1000px;
+      isolation: isolate;
+      border-radius: 15px; /* Bordes redondeados */
+    }
+
+    /* Estilos del frente del sobre */
+    .envelope-front {
+      color: var(--envelope-clr-txt);
+      display: grid;
+      place-content: center;
+    }
+    .envelope-front .postage-stamp {
+      position: absolute;
+      top: 1em;
+      right: 0.5em;
+      width: 15%;
+    }
+    .envelope-front .address {
+      text-align: left;
+      font-size: var(--front-font-size);
+    }
+    .envelope-front .address > p > span:first-child {
+      font-family: system-ui;
+      font-weight: 200;
+    }
+    .envelope-front .address > p > span:last-of-type {
+      font-weight: 800;
+    }
+
+    /* Estilos de la parte trasera del sobre */
+    .envelope-back {
+      transform: rotateY(180deg);
+    }
+    .envelope-back::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      background-image: conic-gradient(
+        transparent 60deg,
+        var(--envelope-clr-bg-side) 60deg 120deg,
+        var(--envelope-clr-bg-bottom) 120deg 240deg,
+        var(--envelope-clr-bg-side) 240deg 300deg,
+        transparent 300deg
+      );
+    }
+    .envelope-back .top-fold {
+      position: absolute;
+      inset: 0;
+      z-index: var(--fold-zindex, 10);
+      background-color: var(--envelope-clr-bg-top);
+      clip-path: polygon(0% 0%, 50% 55%, 100% 0%); /* Forma de la solapa */
+      transform: var(--fold-rotate);
+      transform-origin: top;
+      transition: var(--duration) ease-in-out;
+      transition-delay: var(--fold-delay);
+      border-radius: 15px;
+    }
+
+    /* Estilos de la carta - CORREGIDO */
+    .letter {
+      position: absolute;
+      bottom: 0; /* Changed from 5px to 0 */
+      left: 50%;
+      width: 90%;
+      /* height: var(--letter-height, 80%); */ /* Altura inicial de la carta */
+      font-size: var(--letter-font-size);
+      transform: translateX(-50%);
+      background-color: #fdfdfd; /* Slightly off-white for paper */
+      background-image: linear-gradient(to bottom, #fdfdfd 98%, #e0e0e0 100%); /* Subtle lines */
+      background-size: 100% 1.5em; /* Adjust line height here (e.g., 1.5em) */
+      z-index: 1; /* Changed from 2 to 1 */
+      padding: 2em 3em;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+      text-align: center;
+      transition: all var(--duration) ease-in-out;
+      transition-delay: var(--letter-delay);
+      overflow-y: auto; /* Scroll vertical */
+      overflow-x: hidden; /* Eliminar scroll horizontal */
+      overflow-x: hidden; /* Eliminar scroll horizontal */
+      max-height: 100%;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15); /* More pronounced shadow */
+      border: 1px solid #ddd; /* Subtle border */
+    }
+    /* Estado abierto de la carta - MODIFICADO */
+    .envelope.open .letter {
+      --letter-height: 100%;
+      bottom: 0%;
+      transform: translateX(-50%);
+      z-index: 10;
+      /* Animación en tres fases: 1) salir hacia arriba, 2) bajar, 3) quedar por delante */
+      animation: letterAnimation 3s cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards;
+      animation-delay: calc(var(--duration) * 1.5); /* Comienza cuando el sobre está casi abierto */
+    }
+    
+    /* Animación de la carta en tres fases */
+    @keyframes letterAnimation {
+      0% {
+        transform: translateX(-50%) translateY(0); /* Dentro del sobre */
+        opacity: 1;
+      }
+      30% {
+        transform: translateX(-50%) translateY(-150%); /* Sale hacia arriba */
+        opacity: 0.9;
+      }
+      70% {
+        transform: translateX(-50%) translateY(-20%); /* Comienza a bajar */
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(-50%) translateY(0); /* Queda por delante del sobre */
+        opacity: 1;
+      }
+    }
+    
+    .letter p {
+      margin: 0;
+      font-weight: bold;
+      width: 32ch;
+      color: var(--letter-clr-text);
+    }
+
+    /* Estilos para el contenedor principal del scroll personalizado */
+    .contenedor-con-scroll {
+      position: relative;
+      display: flex;
+      height: 100%; /* Asegura que ocupe la altura disponible */
+      width: 100%;
+    }
+
+    /* Ajustes para la carta dentro del contenedor de scroll */
+    .contenedor-con-scroll .letter {
+      flex-grow: 1; /* Permite que la carta ocupe el espacio restante */
+      overflow-y: auto; /* Habilita el scroll vertical en la carta */
+      overflow-x: hidden; /* Deshabilita el scroll horizontal */
+      /* Eliminar estilos de scrollbar nativos si es posible para evitar duplicidad */
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+
+    /* Ocultar scrollbar nativo para Webkit (Chrome, Safari) */
+    .contenedor-con-scroll .letter::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Estilos para el scroll personalizado */
+    .custom-scroll {
+      width: 20px; /* Ancho de la barra de scroll personalizada */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 5px 0;
+      background-color: rgba(0, 0, 0, 0.1); /* Fondo sutil para la barra */
+      border-radius: 10px;
+      margin-left: 10px; /* Espacio entre la carta y la barra */
+    }
+
+    .scroll-button {
+      background-color: #ff2d55; /* Color del botón */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 12px;
+      margin: 2px 0;
+      transition: background-color 0.2s;
+    }
+
+    .scroll-button:hover {
+      background-color: #e0264b;
+    }
+
+    .scroll-track {
+      flex-grow: 1; /* La pista ocupa el espacio restante */
+      width: 8px; /* Ancho de la pista */
+      background-color: rgba(255, 255, 255, 0.2); /* Fondo de la pista */
+      border-radius: 10px;
+      position: relative;
+      margin: 5px 0;
+    }
+
+    .scroll-thumb {
+      background-color: #ff2d55; /* Color del "pulgar" */
+      border-radius: 10px; /* Bordes redondeados */
+      width: 100%;
+      height: 30px; /* Altura inicial del pulgar */
+      position: absolute;
+      left: 0;
+      top: 0;
+      cursor: grab;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
+      color: white;
+      transition: background-color 0.2s;
+    }
+
+    .scroll-thumb:hover {
+      background-color: #e0264b;
+    }
+
+    
+
+    /* Estilos de las imágenes personalizadas */
+    .custom-image {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+    }
+    .custom-image2 {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+    }
+
+    /* Estilo para resaltar texto */
+    .highlight {
+      display: block;
+      margin-top: 10px;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    /* Estilos para el botón de imagen */
+    .image-button img {
+      transition: transform 0.3s, box-shadow 0.3s;
+      border-radius: 15px;
+    }
+    .image-button:hover img {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Contenedor principal del sobre -->
+<div class="envelope" id="envelope">
+  <!-- Contenedor interno para la animación 3D -->
+  <div class="envelope-inner">
+    <!-- Parte frontal del sobre -->
+    <div class="envelope-front">
+      <div class="postage-stamp">
+        <!-- Aquí puedes poner un icono o imagen de sello -->
+      </div>
+      <div class="address">
+        <p><span>To:</span> <span>My Love</span></p>
+        <p><span>From:</span> <span>Your Favorite Person</span></p>
+      </div>
+    </div>
+
+    <!-- Parte trasera del sobre -->
+    <div class="envelope-back">
+      <!-- Solapa superior -->
+      <div class="top-fold"></div>
+      <!-- La carta -->
+      <div class="contenedor-con-scroll">
+        <div class="letter" id="letter">
+          <img src="https://img.freepik.com/vector-premium/pulgar-dedos-imprimir-marca-huella-dactilar-amor-corazon_53500-1839.jpg" alt="love1" class="custom-image">
+          <p id="text"></p>
+          <!-- Botón para desbloquear rosa.html -->
+          <a href="#" class="image-button" id="desbloquearRosaBtn">
+            <img src="https://img.freepik.com/fotos-premium/imagen-flores-amarillas-palabras-sol-citadas-ella_1191871-60686.jpg" alt="love2" class="custom-image2">
+          </a>
+        </div>
+        <div class="custom-scroll">
+            <button class="scroll-button" id="scrollUp">↑</button>
+            <div class="scroll-track">
+                <div class="scroll-thumb" id="scrollThumb">❤️</div>
+            </div>
+            <button class="scroll-button" id="scrollDown">↓</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // Obtiene el elemento del sobre
+  const envelope = document.getElementById("envelope");
+  // Evita que se pueda copiar el código o abrir las herramientas de desarrollador
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'u')) {
+      e.preventDefault();
+    }
+  });
+
+  // Elementos para el scroll personalizado
+  const letter = document.querySelector('.letter');
+  const scrollThumb = document.getElementById('scrollThumb');
+  const scrollUp = document.getElementById('scrollUp');
+  const scrollDown = document.getElementById('scrollDown');
+
+  // Tamaños para el scroll personalizado
+  const track = scrollThumb.parentElement;
+  const trackHeight = track.offsetHeight;
+  const thumbHeight = scrollThumb.offsetHeight;
+
+  // Función para actualizar posición del thumb según scroll de la carta
+  function updateThumb() {
+    const scrollRatio = letter.scrollTop / (letter.scrollHeight - letter.clientHeight);
+    scrollThumb.style.top = `${scrollRatio * (trackHeight - thumbHeight)}px`;
+  }
+
+  // Scroll al arrastrar el thumb
+  let isDragging = false;
+  let startY, startScrollTop;
+
+  scrollThumb.addEventListener('mousedown', e => {
+    isDragging = true;
+    startY = e.clientY;
+    startScrollTop = letter.scrollTop;
+    scrollThumb.style.cursor = 'grabbing';
+  });
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    scrollThumb.style.cursor = 'grab';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    const deltaY = e.clientY - startY;
+    const scrollRatio = deltaY / (trackHeight - thumbHeight);
+    letter.scrollTop = startScrollTop + scrollRatio * (letter.scrollHeight - letter.clientHeight);
+    updateThumb();
+  });
+
+  // Scroll con botones
+  scrollUp.addEventListener('click', () => {
+    letter.scrollTop -= 30;
+    updateThumb();
+  });
+  scrollDown.addEventListener('click', () => {
+    letter.scrollTop += 30;
+    updateThumb();
+  });
+
+  // Actualizar thumb al hacer scroll con rueda
+  letter.addEventListener('scroll', updateThumb);
+  updateThumb();
+
+  // --- Typewriter effect code ---
+  const textElement = document.getElementById("text");
+
+  // Tu texto romántico
+  const message = `Cada día que paso contigo es un regalo que no puedo dejar de apreciar. 
+Tu risa es mi melodía favorita, y tu mirada, mi lugar seguro. 
+Cuanto más tiempo estoy a tu lado, más te amo y más quiero compartir mi vida contigo. 
+Eres mi pensamiento más dulce y mi sueño más hermoso hecho realidad.`;
+
+  // Variables para escribir letra por letra
+  let index = 0;
+  const speed = 75; // milisegundos entre cada letra
+
+  function typeWriter() {
+  if (index < message.length) {
+    textElement.innerHTML += message.charAt(index);
+    // Add auto-scroll to bottom
+    letter.scrollTop = letter.scrollHeight; // This will scroll the letter div to the bottom
+    updateThumb(); // Update the custom scroll thumb as well
+    index++;
+    setTimeout(typeWriter, speed);
+  }
+}
+
+  // Modificado: Solo se activa cuando abres el sobre
+  envelope.addEventListener("click", () => {
+    envelope.classList.toggle("open");
+    
+    // Reinicia el efecto si se cierra y abre de nuevo
+    if (envelope.classList.contains("open")) {
+      textElement.innerHTML = "";
+      index = 0;
+      setTimeout(typeWriter, 1500); // Empieza después de que la carta suba
+    }
+  });
+
+  // Desbloqueo de rosa.html al hacer clic en la imagen
+  const desbloquearRosaBtn = document.getElementById('desbloquearRosaBtn');
+  if (desbloquearRosaBtn) {
+    desbloquearRosaBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (window.parent !== window) {
+        window.parent.postMessage('desbloquear-rosa', '*');
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

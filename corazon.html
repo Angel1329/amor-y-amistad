@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corazón Mágico</title>
+    <style>
+        /* Estilos generales del cuerpo */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); /* Fondo con gradiente oscuro */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            overflow: hidden; /* Oculta el desbordamiento */
+            position: relative;
+        }
+
+        /* Contenedor principal */
+        .container {
+            text-align: center;
+            z-index: 10;
+        }
+
+        /* Contenedor del corazón */
+        .heart-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 40px;
+        }
+
+        /* Estilos del corazón */
+        .heart {
+            position: absolute;
+            width: 100px;
+            height: 90px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg); /* Centra y rota el corazón */
+            background-color: #444; /* Color del corazón apagado */
+            transition: all 0.8s ease;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); /* Sombra */
+        }
+
+        /* Pseudo-elementos para formar el corazón */
+        .heart:before,
+        .heart:after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 90px;
+            background-color: #444;
+            border-radius: 50%;
+            transition: all 0.8s ease;
+        }
+
+        .heart:before {
+            top: -45px;
+            left: 0;
+        }
+
+        .heart:after {
+            left: 45px;
+            top: 0;
+        }
+
+        /* Estilos del corazón encendido */
+        .heart.on {
+            background-color: #ff2d55; /* Color del corazón encendido */
+            animation: heartbeat 1.5s infinite; /* Animación de latido */
+            filter: drop-shadow(0 0 15px rgba(255, 45, 85, 0.7)); /* Sombra más intensa */
+        }
+
+        .heart.on:before,
+        .heart.on:after {
+            background-color: #ff2d55;
+        }
+
+        /* Animación de latido del corazón */
+        @keyframes heartbeat {
+            0% { transform: translate(-50%, -50%) rotate(-45deg) scale(1); }
+            20% { transform: translate(-50%, -50%) rotate(-45deg) scale(1.15); }
+            40% { transform: translate(-50%, -50%) rotate(-45deg) scale(1); }
+            60% { transform: translate(-50%, -50%) rotate(-45deg) scale(1.1); }
+            80% { transform: translate(-50%, -50%) rotate(-45deg) scale(1); }
+            100% { transform: translate(-50%, -50%) rotate(-45deg) scale(1); }
+        }
+
+        /* Contenedor del interruptor */
+        .switch-container {
+            margin: 30px 0;
+        }
+
+        /* Estilos del interruptor */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 100px;
+            height: 50px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* Deslizador del interruptor */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #555; /* Color del deslizador apagado */
+            transition: .5s;
+            border-radius: 50px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 38px;
+            width: 38px;
+            left: 6px;
+            bottom: 6px;
+            background-color: white;
+            transition: .5s;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        /* Estilos del interruptor encendido */
+        input:checked + .slider {
+            background-color: #ff2d55; /* Color del deslizador encendido */
+            box-shadow: 0 0 15px rgba(255, 45, 85, 0.5);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(50px); /* Mueve el círculo del deslizador */
+        }
+
+        /* Estilos del texto de estado */
+        .status {
+            color: #ddd;
+            font-size: 24px;
+            margin-top: 20px;
+            height: 30px;
+            transition: all 0.5s;
+        }
+
+        .status.active {
+            color: #ff2d55;
+            text-shadow: 0 0 10px rgba(255, 45, 85, 0.7);
+        }
+
+        /* Contenedor de partículas */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* Estilos de las partículas */
+        .particle {
+            position: absolute;
+            background-color: #ff2d55;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        /* Animación de las partículas */
+        @keyframes float-up {
+            0% {
+                transform: translateY(0) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-150px) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Estilos de las instrucciones */
+        .instructions {
+            color: #aaa;
+            margin-top: 40px;
+            font-size: 18px;
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        /* Media query para pantallas pequeñas (móviles) */
+        @media (max-width: 719px) {
+          .heart-container {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+          }
+          .heart {
+            width: 75px;
+            height: 67.5px;
+          }
+          .heart:before,
+          .heart:after {
+            width: 75px;
+            height: 67.5px;
+          }
+          .heart:before {
+            top: -33.75px;
+          }
+          .heart:after {
+            left: 37.5px;
+          }
+          .switch {
+            width: 80px;
+            height: 40px;
+          }
+          .slider:before {
+            height: 30px;
+            width: 30px;
+            left: 5px;
+            bottom: 5px;
+          }
+          input:checked + .slider:before {
+            transform: translateX(40px);
+          }
+          .status {
+            font-size: 20px;
+          }
+          .instructions {
+            font-size: 16px;
+            margin-top: 20px;
+          }
+        }
+    </style>
+</head>
+<body>
+    <!-- Contenedor para las partículas -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Contenedor principal de la aplicación -->
+    <div class="container">
+        <!-- Contenedor del corazón -->
+        <div class="heart-container">
+            <div class="heart" id="heart"></div>
+        </div>
+        
+        <!-- Contenedor del interruptor -->
+        <div class="switch-container">
+            <label class="switch">
+                <input type="checkbox" id="toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+        
+        <!-- Texto que muestra el estado del corazón -->
+        <div class="status" id="status">Corazón Apagado</div>
+        
+        <!-- Instrucciones para el usuario -->
+        <div class="instructions">
+            Activa el interruptor para encender el corazón<br>
+            y descubrir la magia que te espera
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obtiene los elementos del DOM
+            const toggle = document.getElementById('toggle');
+            const heart = document.getElementById('heart');
+            const status = document.getElementById('status');
+            const particlesContainer = document.getElementById('particles');
+            let redirectTimer = null; // Variable para el temporizador de redirección
+            
+            // Evento que se dispara al cambiar el estado del interruptor
+            toggle.addEventListener('change', function() {
+                if (this.checked) {
+                    // Si el interruptor está encendido
+                    heart.classList.add('on'); // Enciende el corazón
+                    status.textContent = "Corazón Encendido";
+                    status.classList.add('active');
+                    
+                    createParticles(); // Crea las partículas
+                    
+                    // Inicia un temporizador para redirigir a otra página
+                    redirectTimer = setTimeout(() => {
+                        status.textContent = "¡Preparando sorpresa!";
+                        
+                        // Redirige a carta.html después de 1 segundo
+                        setTimeout(() => {
+                            if (window.parent !== window) {
+                                window.parent.postMessage('desbloquear-carta', '*');
+                            }
+                        }, 1000);
+                    }, 3000);
+                } else {
+                    // Si el interruptor está apagado
+                    heart.classList.remove('on'); // Apaga el corazón
+                    status.textContent = "Corazón Apagado";
+                    status.classList.remove('active');
+                    
+                    // Cancela el temporizador de redirección si existe
+                    if (redirectTimer) {
+                        clearTimeout(redirectTimer);
+                        redirectTimer = null;
+                    }
+                }
+            });
+            
+            // Función para crear las partículas
+            function createParticles() {
+                for (let i = 0; i < 50; i++) {
+                    setTimeout(() => {
+                        const particle = document.createElement('div');
+                        particle.classList.add('particle');
+                        
+                        // Asigna tamaño y posición aleatorios a las partículas
+                        const size = Math.random() * 12 + 5;
+                        particle.style.width = `${size}px`;
+                        particle.style.height = `${size}px`;
+                        
+                        const posX = window.innerWidth/2 + (Math.random() * 200 - 100);
+                        const posY = window.innerHeight/2 + (Math.random() * 100 - 50);
+                        
+                        particle.style.left = `${posX}px`;
+                        particle.style.top = `${posY}px`;
+                        
+                        // Asigna una duración de animación aleatoria
+                        const duration = Math.random() * 2 + 1;
+                        particle.style.animation = `float-up ${duration}s ease-out forwards`;
+                        
+                        particlesContainer.appendChild(particle);
+                        
+                        // Elimina la partícula después de que termine la animación
+                        setTimeout(() => {
+                            particle.remove();
+                        }, duration * 1000);
+                    }, i * 50);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
